@@ -14,13 +14,14 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Appointment {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
     @JoinColumn(name = "patient_id", nullable = false)
-    Patient patient;
+    private Patient patient;
 
     @ManyToOne
     @JoinColumn(name = "doctor_id", nullable = false)
@@ -30,5 +31,4 @@ public class Appointment {
 
     @Enumerated(EnumType.STRING)
     private Status status;
-
 }

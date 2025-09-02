@@ -74,7 +74,6 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
-
         <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
