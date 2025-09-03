@@ -20,12 +20,6 @@ import java.io.IOException;
 @Component
 public class JwtFilter extends OncePerRequestFilter {
 
-    /**
-     * intercepts the request,
-     * validates the token,
-     * and sets the authenticated user in Spring Security context.
-     */
-
     @Autowired
     private JwtUtil jwtUtil;
 
@@ -48,16 +42,22 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            // Load UserDetails (Spring Security user)
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-            if (jwtUtil.validateToken(token, ((User) userDetails))) {
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities()
-                );
+
+            // Validate token using username
+            if (jwtUtil.validateToken(token, userDetails.getUsername())) {
+                UsernamePasswordAuthenticationToken authToken =
+                        new UsernamePasswordAuthenticationToken(
+                                userDetails, null, userDetails.getAuthorities()
+                        );
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         }
+
         filterChain.doFilter(request, response);
     }
 }
+
 
